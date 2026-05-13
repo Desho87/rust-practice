@@ -1,0 +1,59 @@
+pub fn count_apples_and_oranges(
+    s: i32,
+    t: i32,
+    a: i32,
+    b: i32,
+    apples: &[i32],
+    oranges: &[i32],
+) -> (i32, i32) {
+    let apple_count = apples
+        .iter()
+        .filter(|&&d| {
+            let pos = a + d;
+            pos >= s && pos <= t
+        })
+        .count() as i32;
+
+    let orange_count = oranges
+        .iter()
+        .filter(|&&d| {
+            let pos = b + d;
+            pos >= s && pos <= t
+        })
+        .count() as i32;
+
+    (apple_count, orange_count)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_sample() {
+        let apples = vec![-2, 2, 1];
+        let oranges = vec![5, -6];
+        let result = count_apples_and_oranges(7, 11, 5, 15, &apples, &oranges);
+        assert_eq!(result, (1, 1));
+    }
+
+    #[test]
+    fn test_no_fruits() {
+        let apples = vec![-10, -9];
+        let oranges = vec![20, 21];
+        let result = count_apples_and_oranges(7, 11, 5, 15, &apples, &oranges);
+        assert_eq!(result, (0, 0));
+    }
+
+    #[test]
+    fn test_all_fruits() {
+        // Яблуня на 0, будинок від 5 до 10
+        // Яблука падають на 5,6,7,8,9,10 (всі в діапазоні)
+        let apples = vec![5, 6, 7, 8, 9, 10];
+        // Апельсинове дерево на 20, будинок від 5 до 10
+        // Апельсини падають на -15,-14,-13,-12,-11,-10 (всі в діапазоні)
+        let oranges = vec![-15, -14, -13, -12, -11, -10];
+        let result = count_apples_and_oranges(5, 10, 0, 20, &apples, &oranges);
+        assert_eq!(result, (6, 6));
+    }
+}
